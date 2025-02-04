@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tastenfeld</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+        #keyboard {
+            display: grid;
+            grid-template-columns: repeat(6, 60px);
+            gap: 8px;
+            padding: 20px;
+            background: #2c2c2c;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .key {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 22px;
+            font-weight: bold;
+            background-color: #3a3a3a;
+            color: #ffffff;
+            transition: background 0.2s;
+        }
+        .key:hover {
+            background-color: #505050;
+        }
+        .key:active {
+            background-color: #707070;
+        }
+        .backspace {
+            background-color: #b22222;
+        }
+        .backspace:hover {
+            background-color: #d32f2f;
+        }
+        #display {
+            margin-bottom: 20px;
+            font-size: 28px;
+            min-height: 40px;
+            padding: 10px;
+            border-radius: 5px;
+            background: #2c2c2c;
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div id="display"></div>
+    <div id="keyboard"></div>
+    <script>
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+        const numbers = "0123456789".split("");
+        let displayText = "";
+        const display = document.getElementById("display");
+        const keyboard = document.getElementById("keyboard");
+        
+        function shuffleKeys() {
+            keyboard.innerHTML = "";
+            const shuffledKeys = [...letters, ...numbers].sort(() => Math.random() - 0.5);
+            shuffledKeys.forEach(keyChar => {
+                const key = document.createElement("div");
+                key.classList.add("key");
+                key.textContent = keyChar;
+                key.addEventListener("click", () => {
+                    displayText += keyChar;
+                    display.textContent = displayText;
+                    if (displayText === "TEST123") {
+                        window.location.href = "https://phoenixevents.pages.dev/";
+                    }
+                });
+                keyboard.appendChild(key);
+            });
+            
+            const backspaceKey = document.createElement("div");
+            backspaceKey.classList.add("key", "backspace");
+            backspaceKey.textContent = "←";
+            backspaceKey.addEventListener("click", () => {
+                displayText = displayText.slice(0, -1);
+                display.textContent = displayText;
+            });
+            keyboard.appendChild(backspaceKey);
+        }
+        
+        shuffleKeys();
+        setInterval(shuffleKeys, 1000);
+    </script>
+</body>
+</html>
