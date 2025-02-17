@@ -1,108 +1,162 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tastenfeld</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-            background-color: #1e1e1e;
-            color: #ffffff;
-        }
-        #keyboard {
-            display: grid;
-            grid-template-columns: repeat(6, 60px);
-            gap: 8px;
-            padding: 20px;
-            background: #2c2c2c;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-        .key {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 22px;
-            font-weight: bold;
-            background-color: #3a3a3a;
-            color: #ffffff;
-            transition: background 0.2s;
-        }
-        .key:hover {
-            background-color: #505050;
-        }
-        .key:active {
-            background-color: #707070;
-        }
-        .backspace {
-            background-color: #b22222;
-        }
-        .backspace:hover {
-            background-color: #d32f2f;
-        }
-        #display {
-            margin-bottom: 20px;
-            font-size: 28px;
-            min-height: 40px;
-            padding: 10px;
-            border-radius: 5px;
-            background: #2c2c2c;
-            text-align: center;
-            width: 80%;
-            max-width: 400px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tastenfeld</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e;
+      color: #ffffff;
+    }
+    /* Fehlermeldung über dem Eingabefeld */
+    #message {
+      margin-bottom: 10px;
+      font-size: 20px;
+      color: #ff5555;
+      text-align: center;
+      min-height: 24px; /* Platz reservieren */
+    }
+    #display {
+      margin-bottom: 20px;
+      font-size: 28px;
+      min-height: 40px;
+      padding: 10px;
+      border-radius: 5px;
+      background: #2c2c2c;
+      text-align: center;
+      width: 80%;
+      max-width: 400px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    #keyboard {
+      display: grid;
+      grid-template-columns: repeat(6, 60px);
+      gap: 8px;
+      padding: 20px;
+      background: #2c2c2c;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    .key {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: bold;
+      background-color: #3a3a3a;
+      color: #ffffff;
+      transition: background 0.2s;
+    }
+    .key:hover {
+      background-color: #505050;
+    }
+    .key:active {
+      background-color: #707070;
+    }
+    .backspace {
+      background-color: #b22222;
+    }
+    .backspace:hover {
+      background-color: #d32f2f;
+    }
+    /* Grüner OK-Button */
+    .green-button {
+      background-color: #228B22;
+    }
+    .green-button:hover {
+      background-color: #32CD32;
+    }
+    .green-button:active {
+      background-color: #2e8b57;
+    }
+  </style>
 </head>
 <body>
-    <div id="display"></div>
-    <div id="keyboard"></div>
-    <script>
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-        const numbers = "0123456789".split("");
-        let displayText = "";
-        const display = document.getElementById("display");
-        const keyboard = document.getElementById("keyboard");
-        
-        function shuffleKeys() {
-            keyboard.innerHTML = "";
-            const shuffledKeys = [...letters, ...numbers].sort(() => Math.random() - 0.5);
-            shuffledKeys.forEach(keyChar => {
-                const key = document.createElement("div");
-                key.classList.add("key");
-                key.textContent = keyChar;
-                key.addEventListener("click", () => {
-                    displayText += keyChar;
-                    display.textContent = displayText;
-                    if (displayText === "TEST123") {
-                        window.location.href = "https://phoenixevents.pages.dev/";
-                    }
-                });
-                keyboard.appendChild(key);
-            });
-            
-            const backspaceKey = document.createElement("div");
-            backspaceKey.classList.add("key", "backspace");
-            backspaceKey.textContent = "←";
-            backspaceKey.addEventListener("click", () => {
-                displayText = displayText.slice(0, -1);
-                display.textContent = displayText;
-            });
-            keyboard.appendChild(backspaceKey);
+  <!-- Fehlermeldung -->
+  <div id="message"></div>
+  <div id="display"></div>
+  <div id="keyboard"></div>
+  <script>
+    // Definiere hier die Passwörter und zugehörigen Links
+    const passwordMapping = {
+      "LS-187": "https://pathologie.my.canva.site/ls187",
+      "LUX-211825": "https://pathologie.my.canva.site/lux211825",
+	  "MOS-1252519": "https://pathologie.my.canva.site/emos1252519",
+	  "WIP-404": "https://pathologie.my.canva.site/wip404",
+	  "PHOE-30122024": "https://pathologie.my.canva.site/phoe30122024",
+	  "LMAA-1337": "https://pathologie.my.canva.site/lmaa1337",
+    };
+
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    const numbers = "0123456789-,.: /".split("");
+    let displayText = "";
+    const message = document.getElementById("message");
+    const display = document.getElementById("display");
+    const keyboard = document.getElementById("keyboard");
+
+    function shuffleKeys() {
+      // Leere das Tastenfeld (die normalen Tasten werden neu generiert)
+      keyboard.innerHTML = "";
+      // Zufällige Anordnung der Buchstaben und Zahlen
+      const shuffledKeys = [...letters, ...numbers].sort(() => Math.random() - 0.5);
+      
+      shuffledKeys.forEach(keyChar => {
+        const key = document.createElement("div");
+        key.classList.add("key");
+        key.textContent = keyChar;
+        key.addEventListener("click", () => {
+          displayText += keyChar;
+          display.textContent = displayText;
+          // Lösche die Fehlermeldung, falls vorhanden
+          message.textContent = "";
+        });
+        keyboard.appendChild(key);
+      });
+      
+      // Spezielle Tasten in der untersten Zeile:
+      
+      // Rückwärtstaste (Backspace) in Spalte 5
+      const backspaceKey = document.createElement("div");
+      backspaceKey.classList.add("key", "backspace");
+      backspaceKey.textContent = "←";
+      backspaceKey.style.gridColumnStart = "5";
+      backspaceKey.addEventListener("click", () => {
+        displayText = displayText.slice(0, -1);
+        display.textContent = displayText;
+        message.textContent = "";
+      });
+      keyboard.appendChild(backspaceKey);
+      
+      // Grüner OK-Button in Spalte 6
+      const greenButton = document.createElement("div");
+      greenButton.classList.add("key", "green-button");
+      greenButton.textContent = "OK";
+      greenButton.style.gridColumnStart = "6";
+      greenButton.addEventListener("click", () => {
+        if (passwordMapping[displayText]) {
+          // Öffne den Link in einem neuen Tab
+          window.open(passwordMapping[displayText], '_blank');
+        } else {
+          // Fehlermeldung anzeigen
+          message.textContent = `"${displayText}" wurde nicht gefunden`;
         }
-        
-        shuffleKeys();
-        setInterval(shuffleKeys, 1500);
-    </script>
+      });
+      keyboard.appendChild(greenButton);
+    }
+    
+    shuffleKeys();
+    setInterval(shuffleKeys, 1500);
+  </script>
 </body>
 </html>
