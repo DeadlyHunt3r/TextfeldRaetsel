@@ -88,15 +88,20 @@
   <div id="display"></div>
   <div id="keyboard"></div>
   <script>
-    // Definiere hier die Passwörter und zugehörigen Links
+    // Definiere hier die Passwörter und zugehörigen Aktionen (Link oder Sound)
     const passwordMapping = {
       "LS-187": "https://pathologie.my.canva.site/ls187",
       "LUX-211825": "https://pathologie.my.canva.site/lux211825",
-	  "MOS-1252519": "https://pathologie.my.canva.site/emos1252519",
-	  "WIP-404": "https://pathologie.my.canva.site/wip404",
-	  "PHOE-30122024": "https://pathologie.my.canva.site/phoe30122024",
-	  "LMAA-1337": "https://pathologie.my.canva.site/lmaa1337",
-	  "12 4 7 0": "https://deadlyhunt3r.github.io/puzzle/",
+      "MOS-1252519": "https://pathologie.my.canva.site/emos1252519",
+      "WIP-404": "https://pathologie.my.canva.site/wip404",
+      "PHOE-30122024": "https://pathologie.my.canva.site/phoe30122024",
+      "LMAA-1337": "https://pathologie.my.canva.site/lmaa1337",
+      "12 4 7 0": "https://deadlyhunt3r.github.io/puzzle/",
+      "Benzodiazepine": "https://drive.google.com/file/d/1PQW5i8gcvaA714XmWG7oAezR23kDI0wQ/view",
+      "Benzodiazepinen": "https://drive.google.com/file/d/1PQW5i8gcvaA714XmWG7oAezR23kDI0wQ/view",
+      //Sounddatei abspielen:
+      "OPIOIDEN": "SPOOKY_SCREAM_03.wav",
+      "ANTIDEPRESSIVA": "dont-look-behind-you-103379.mp3"
     };
 
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -145,9 +150,16 @@
       greenButton.textContent = "OK";
       greenButton.style.gridColumnStart = "6";
       greenButton.addEventListener("click", () => {
-        if (passwordMapping[displayText]) {
-          // Öffne den Link in einem neuen Tab
-          window.open(passwordMapping[displayText], '_blank');
+        const action = passwordMapping[displayText];
+        if (action) {
+          // Prüfen, ob der Mapping-Wert auf eine Sounddatei verweist
+          if (/\.(mp3|wav|ogg)$/i.test(action)) {
+            const audio = new Audio(action);
+            audio.play();
+          } else {
+            // Andernfalls wird der Link in einem neuen Tab geöffnet
+            window.open(action, '_blank');
+          }
         } else {
           // Fehlermeldung anzeigen
           message.textContent = `"${displayText}" wurde nicht gefunden`;
