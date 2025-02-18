@@ -80,6 +80,21 @@
     .green-button:active {
       background-color: #2e8b57;
     }
+    /* Overlay-Popup */
+    #overlay {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #2c2c2c;
+      color: #ffffff;
+      padding: 20px 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      font-size: 20px;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -87,6 +102,8 @@
   <div id="message"></div>
   <div id="display"></div>
   <div id="keyboard"></div>
+  <!-- Overlay-Popup -->
+  <div id="overlay">Datenbank wird durchsucht…</div>
   <script>
     // Definiere hier die Passwörter und zugehörigen Aktionen (Link oder Sound)
     const passwordMapping = {
@@ -110,6 +127,16 @@
     const message = document.getElementById("message");
     const display = document.getElementById("display");
     const keyboard = document.getElementById("keyboard");
+    const overlay = document.getElementById("overlay");
+
+    function showOverlay(text) {
+      overlay.textContent = text;
+      overlay.style.display = "block";
+    }
+
+    function hideOverlay() {
+      overlay.style.display = "none";
+    }
 
     function shuffleKeys() {
       // Leere das Tastenfeld (die normalen Tasten werden neu generiert)
@@ -150,20 +177,27 @@
       greenButton.textContent = "OK";
       greenButton.style.gridColumnStart = "6";
       greenButton.addEventListener("click", () => {
-        const action = passwordMapping[displayText];
-        if (action) {
-          // Prüfen, ob der Mapping-Wert auf eine Sounddatei verweist
-          if (/\.(mp3|wav|ogg)$/i.test(action)) {
-            const audio = new Audio(action);
-            audio.play();
+        // Zeige zunächst das Popup
+        showOverlay("Datenbank wird durchsucht…");
+        // Zufällige Verzögerung zwischen 2000 und 4000 ms
+        const delay = Math.floor(Math.random() * (4000 - 2000 + 1)) + 2000;
+        setTimeout(() => {
+          hideOverlay();
+          const action = passwordMapping[displayText];
+          if (action) {
+            // Falls es sich um eine Sounddatei handelt
+            if (/\.(mp3|wav|ogg)$/i.test(action)) {
+              const audio = new Audio(action);
+              audio.play();
+            } else {
+              // Öffne den Link in einem neuen Tab
+              window.open(action, '_blank');
+            }
           } else {
-            // Andernfalls wird der Link in einem neuen Tab geöffnet
-            window.open(action, '_blank');
+            // Fehlermeldung anzeigen, falls nichts gefunden wurde
+            message.textContent = `"${displayText}" wurde nicht gefunden`;
           }
-        } else {
-          // Fehlermeldung anzeigen
-          message.textContent = `"${displayText}" wurde nicht gefunden`;
-        }
+        }, delay);
       });
       keyboard.appendChild(greenButton);
     }
